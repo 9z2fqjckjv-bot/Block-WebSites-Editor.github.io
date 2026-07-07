@@ -1,0 +1,220 @@
+/* ===== Reset & Base ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+  background: #1e1e2e;
+  color: #cdd6f4;
+  overflow: hidden;
+}
+
+/* ===== App Header ===== */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 52px;
+  background: #181825;
+  border-bottom: 1px solid #313244;
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-icon { font-size: 22px; }
+
+.brand-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #cba6f7;
+  letter-spacing: -0.3px;
+}
+
+.brand-tagline {
+  font-size: 11px;
+  color: #6c7086;
+}
+
+.app-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.12s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.btn:hover { filter: brightness(1.15); }
+.btn:active { transform: scale(0.96); }
+
+.btn-primary  { background: #89b4fa; color: #1e1e2e; }
+.btn-secondary { background: #313244; color: #cdd6f4; }
+.btn-danger   { background: #f38ba8; color: #1e1e2e; }
+
+/* ===== Editor Layout ===== */
+.editor-layout {
+  display: flex;
+  height: calc(100vh - 52px);
+  overflow: hidden;
+}
+
+/* ===== Panels ===== */
+.panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.editor-panel {
+  width: 55%;
+  min-width: 280px;
+  flex-shrink: 0;
+}
+
+.preview-panel {
+  flex: 1;
+  min-width: 280px;
+}
+
+/* ===== Panel Toolbar ===== */
+.panel-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  background: #181825;
+  border-bottom: 1px solid #313244;
+  flex-shrink: 0;
+  height: 40px;
+  gap: 8px;
+}
+
+.panel-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #a6adc8;
+  white-space: nowrap;
+}
+
+.panel-hint {
+  font-size: 11px;
+  color: #6c7086;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ===== Blockly Area ===== */
+#blocklyDiv {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ===== Resize Handle ===== */
+.resize-handle {
+  width: 5px;
+  background: #313244;
+  cursor: col-resize;
+  flex-shrink: 0;
+  transition: background 0.15s;
+  position: relative;
+}
+
+.resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 3px;
+  height: 40px;
+  background: #45475a;
+  border-radius: 2px;
+}
+
+.resize-handle:hover,
+.resize-handle.dragging {
+  background: #45475a;
+}
+
+.resize-handle:hover::after,
+.resize-handle.dragging::after {
+  background: #89b4fa;
+}
+
+/* ===== Preview Panel ===== */
+.tab-bar {
+  display: flex;
+  gap: 2px;
+}
+
+.tab-btn {
+  padding: 4px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #6c7086;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.tab-btn:hover { color: #cdd6f4; background: #2a2a3e; }
+.tab-btn.active { background: #313244; color: #89b4fa; }
+
+.preview-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+.preview-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #fff;
+}
+
+.code-view {
+  width: 100%;
+  height: 100%;
+  padding: 16px 20px;
+  overflow: auto;
+  background: #11111b;
+  font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Courier New', monospace;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: #a6e3a1;
+  white-space: pre;
+  tab-size: 2;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #313244; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #45475a; }

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サンプル</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+      font-size: 16px;
+      background-color: #f8f9fa;
+      color: #333333;
+      line-height: 1.6;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a   { color: inherit; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.10);
+      padding: 1.5rem;
+    }
+    @media (max-width: 900px) {
+      .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <section style="background-color:#3498db; color:#1a1a1a; padding:5rem 2rem; text-align:center;">
+    <h1 style="font-size:clamp(2rem,5vw,3.5rem); margin-bottom:1rem;">ようこそ！</h1>
+    <p style="font-size:1.2rem; margin-bottom:2rem; opacity:.85;">このページは Block Website Editor で作られたサイトのサンプルです。</p>
+    <a href="https://9z2fqjckjv-bot.github.io/zuyasi.github.io/" style="display:inline-block; padding:.8em 2.2em; background:rgba(0,0,0,.85); color:#ffffff; text-decoration:none; border-radius:50px; font-weight:700; font-size:1rem;">作成者について知る</a>
+  </section>
+  <main style="max-width:1200px; margin:0 auto; padding:2rem;">
+    <h2 style="color:#2c3e50; text-align:center;">ブロックでWebサイトを作ろう！</h2>
+    <p style="font-size:16px; color:#555555; text-align:center;">このツールはブロックベースでWebサイトを制作できます</p>
+    <div class="grid-3">
+      <div class="card">
+        <h3 style="margin-top:0; margin-bottom:.75rem;">🏗 ページ構造</h3>
+        <p style="font-size:14px; color:#555555; text-align:left;">header / nav / main / footer などのセマンティックなブロックが揃っています。</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0; margin-bottom:.75rem;">📝 テキスト</h3>
+        <p style="font-size:14px; color:#555555; text-align:left;">見出し・段落などのテキスト要素を色・サイズ・揃えつきで追加できます。</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0; margin-bottom:.75rem;">💾 エクスポート</h3>
+        <p style="font-size:14px; color:#555555; text-align:left;">「HTMLダウンロード」ボタンで完成したHTMLをindex.htmlとして保存し、GitHub Pagesで公開できます。</p>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

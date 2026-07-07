@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHubPagesの使い方</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+      font-size: 16px;
+      background-color: #f8f9fa;
+      color: #333333;
+      line-height: 1.6;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a   { color: inherit; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.10);
+      padding: 1.5rem;
+    }
+    @media (max-width: 900px) {
+      .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <section style="background-color:#3498db; color:#1a1a1a; padding:5rem 2rem; text-align:center;">
+    <h1 style="font-size:clamp(2rem,5vw,3.5rem); margin-bottom:1rem;">あなたの作ったサイトを公開する方法</h1>
+    <p style="font-size:1.2rem; margin-bottom:2rem; opacity:.85;">GitHubPagesの使い方</p>
+    <a href="https://9z2fqjckjv-bot.github.io/zuyasi.github.io/" style="display:inline-block; padding:.8em 2.2em; background:rgba(0,0,0,.85); color:#ffffff; text-decoration:none; border-radius:50px; font-weight:700; font-size:1rem;">投稿者の詳細はこちら</a>
+  </section>
+  <main style="max-width:1200px; margin:0 auto; padding:2rem;">
+    <h2 style="color:#2c3e50; text-align:center;">GitHubアカウントを登録する。</h2>
+    <p style="font-size:16px; color:#000000; text-align:center;">GitHubPagesを使う場合、まず初めにGitHubのアカウントが必要です。</p>
+    <p style="font-size:16px; color:#000000; text-align:center;">GitHubのアカウント登録は以下の手順は実施します。</p>
+    <ol>
+      <li>以下のボタンからGitHubアカウントを登録もしくはログインします。</li>
+      <a href="https://github.com/" style="display:inline-block; padding:.6em 1.4em; background-color:#3498db; color:#ffffff; text-decoration:none; border-radius:6px; font-weight:700;">GitHubにアクセス（外部サイトに飛びます。）</a>
+      <li>アカウントを作成若しくはログインできたら、以下にアクセスします。</li>
+      <a href="https://github.com/new">新規リポジトリを作成</a>
+      <li>新規リポジトリを作成する際に、「リポジトリ名.github.io」にします。新規作成をしたら、index.htmlをこのツールを使って作成します。</li>
+      <a href="https://github.com/9z2fqjckjv-bot/Block-WebSites-Editor.github.io">使い方はこちらをご参照ください。</a>
+      <li>ファイルの作成が終わったら、ダウンロードを行います。</li>
+      <li>ダウンロードが済んだら、先ほど作成したリポジトリにアクセスし、リポジトリトップ&gt;Settingsにアクセスします。</li>
+      <img src="https://9z2fqjckjv-bot.github.io/Block-WebSites-Editor.github.io/%E5%8F%82%E8%80%83%E7%94%BB%E5%83%8F.png" alt="画像内の赤枠で囲まれてる場所です。" style="width:100%; height:auto;">
+      <li>設定にアクセスしたら左側のメニューからPagesを選択します。</li>
+      <img src="https://9z2fqjckjv-bot.github.io/Block-WebSites-Editor.github.io/%E5%8F%82%E8%80%83%E7%94%BB%E5%83%8F2.png" alt="画像内の赤枠で囲まれている床をクリックします。" style="width:100%; height:auto;">
+    </ol>
+  </main>
+</body>
+</html>

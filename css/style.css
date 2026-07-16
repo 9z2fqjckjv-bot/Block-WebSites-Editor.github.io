@@ -13,17 +13,22 @@ html, body {
   overflow: hidden;
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+}
+
 /* ===== App Header ===== */
 .app-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
-  height: 52px;
+  padding: 8px 12px;
   background: #181825;
   border-bottom: 1px solid #313244;
   flex-shrink: 0;
   z-index: 100;
+  gap: 10px;
 }
 
 .app-brand {
@@ -49,6 +54,29 @@ html, body {
 .app-actions {
   display: flex;
   gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.action-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.toolbar-label {
+  font-size: 11px;
+  color: #a6adc8;
+}
+
+.toolbar-select {
+  border: 1px solid #45475a;
+  border-radius: 8px;
+  padding: 6px 8px;
+  background: #1e1e2e;
+  color: #cdd6f4;
+  font-size: 12px;
 }
 
 /* ===== Buttons ===== */
@@ -76,7 +104,8 @@ html, body {
 /* ===== Editor Layout ===== */
 .editor-layout {
   display: flex;
-  height: calc(100vh - 52px);
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -189,7 +218,11 @@ html, body {
   flex: 1;
   min-height: 0;
   display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
+  background: #11111b;
+  padding: 16px;
 }
 
 .preview-frame {
@@ -197,6 +230,18 @@ html, body {
   height: 100%;
   border: none;
   background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, .35);
+}
+
+.preview-frame.device-tablet {
+  width: min(900px, 100%);
+  height: min(100%, 1100px);
+}
+
+.preview-frame.device-mobile {
+  width: min(430px, 100%);
+  height: min(100%, 860px);
 }
 
 .code-view {
@@ -211,6 +256,44 @@ html, body {
   color: #a6e3a1;
   white-space: pre;
   tab-size: 2;
+}
+
+.status-bar {
+  height: 28px;
+  border-top: 1px solid #313244;
+  background: #181825;
+  color: #6c7086;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#statusMessage {
+  color: #a6adc8;
+}
+
+#statusMeta {
+  color: #89b4fa;
+}
+
+.status-shortcuts {
+  margin-left: auto;
+}
+
+@media (max-width: 1200px) {
+  .brand-tagline {
+    display: none;
+  }
+}
+
+@media (max-width: 980px) {
+  .status-shortcuts {
+    display: none;
+  }
 }
 
 /* ===== Scrollbar ===== */

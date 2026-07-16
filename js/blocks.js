@@ -202,12 +202,34 @@ Blockly.defineBlocksWithJsonArray([
   // <img>
   {
     'type': 'media_image',
-    'message0': '🖼 画像\nURL: %1\n説明(alt): %2\n幅: %3  高さ: %4',
+    'message0': '🖼 画像\nURL: %1\n説明(alt): %2\n幅: %3  高さ: %4\n揃え: %5  配置: %6\nX: %7  Y: %8  重なり順(z): %9',
     'args0': [
       { 'type': 'field_input', 'name': 'SRC',    'text': 'https://placehold.co/600x300' },
       { 'type': 'field_input', 'name': 'ALT',    'text': '画像の説明' },
       { 'type': 'field_input', 'name': 'WIDTH',  'text': '100%' },
-      { 'type': 'field_input', 'name': 'HEIGHT', 'text': 'auto' }
+      { 'type': 'field_input', 'name': 'HEIGHT', 'text': 'auto' },
+      {
+        'type': 'field_dropdown',
+        'name': 'ALIGN',
+        'options': [
+          ['左',   'left'],
+          ['中央', 'center'],
+          ['右',   'right']
+        ]
+      },
+      {
+        'type': 'field_dropdown',
+        'name': 'POSITION',
+        'options': [
+          ['通常', 'static'],
+          ['相対', 'relative'],
+          ['絶対', 'absolute'],
+          ['固定', 'fixed']
+        ]
+      },
+      { 'type': 'field_input',  'name': 'OFFSET_X', 'text': '0px' },
+      { 'type': 'field_input',  'name': 'OFFSET_Y', 'text': '0px' },
+      { 'type': 'field_number', 'name': 'Z_INDEX',  'value': 1, 'min': -9999, 'max': 9999 }
     ],
     'previousStatement': null,
     'nextStatement': null,
@@ -251,12 +273,34 @@ Blockly.defineBlocksWithJsonArray([
   // Button-styled link
   {
     'type': 'link_button',
-    'message0': '🔘 ボタン\nテキスト: %1\nURL: %2\n背景色: %3  テキスト色: %4',
+    'message0': '🔘 ボタン\nテキスト: %1\nURL: %2\n背景色: %3  テキスト色: %4\n揃え: %5  配置: %6\nX: %7  Y: %8  重なり順(z): %9',
     'args0': [
       { 'type': 'field_input',  'name': 'TEXT',       'text': 'クリック！' },
       { 'type': 'field_input',  'name': 'HREF',       'text': '#' },
       { 'type': 'field_colour', 'name': 'BG_COLOR',   'colour': '#3498db' },
-      { 'type': 'field_colour', 'name': 'TEXT_COLOR', 'colour': '#ffffff' }
+      { 'type': 'field_colour', 'name': 'TEXT_COLOR', 'colour': '#ffffff' },
+      {
+        'type': 'field_dropdown',
+        'name': 'ALIGN',
+        'options': [
+          ['左',   'left'],
+          ['中央', 'center'],
+          ['右',   'right']
+        ]
+      },
+      {
+        'type': 'field_dropdown',
+        'name': 'POSITION',
+        'options': [
+          ['通常', 'static'],
+          ['相対', 'relative'],
+          ['絶対', 'absolute'],
+          ['固定', 'fixed']
+        ]
+      },
+      { 'type': 'field_input',  'name': 'OFFSET_X', 'text': '0px' },
+      { 'type': 'field_input',  'name': 'OFFSET_Y', 'text': '0px' },
+      { 'type': 'field_number', 'name': 'Z_INDEX',  'value': 1, 'min': -9999, 'max': 9999 }
     ],
     'previousStatement': null,
     'nextStatement': null,

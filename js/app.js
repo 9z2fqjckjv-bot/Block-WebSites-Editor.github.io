@@ -92,11 +92,141 @@ const STARTER_XML = `
   </block>
 </xml>`;
 
+const TEMPLATE_XML = {
+  starter: STARTER_XML,
+  portfolio: `
+<xml xmlns="https://developers.google.com/blockly/xml">
+  <block type="page_root" x="20" y="20">
+    <field name="TITLE">My Portfolio</field>
+    <field name="FONT_SIZE">16</field>
+    <field name="BG_COLOR">#f6f7fb</field>
+    <field name="TEXT_COLOR">#222222</field>
+    <statement name="CONTENT">
+      <block type="comp_hero">
+        <field name="TITLE">山田 太郎</field>
+        <field name="SUBTITLE">Web / UI Engineer</field>
+        <field name="BTN_TEXT">制作実績を見る</field>
+        <field name="BTN_URL">#works</field>
+        <field name="BG_COLOR">#4f46e5</field>
+        <next>
+          <block type="page_main">
+            <statement name="CONTENT">
+              <block type="text_heading">
+                <field name="LEVEL">2</field>
+                <field name="TEXT">Works</field>
+                <field name="COLOR">#1f2937</field>
+                <field name="ALIGN">left</field>
+                <next>
+                  <block type="comp_grid">
+                    <field name="COLS">3</field>
+                    <statement name="CONTENT">
+                      <block type="comp_card">
+                        <field name="TITLE">Project A</field>
+                        <statement name="CONTENT">
+                          <block type="text_paragraph">
+                            <field name="TEXT">ECサイトのUI設計と実装。</field>
+                            <field name="FONT_SIZE">14</field>
+                            <field name="COLOR">#4b5563</field>
+                            <field name="ALIGN">left</field>
+                          </block>
+                        </statement>
+                        <next>
+                          <block type="comp_card">
+                            <field name="TITLE">Project B</field>
+                            <statement name="CONTENT">
+                              <block type="text_paragraph">
+                                <field name="TEXT">SaaSダッシュボードのデザイン改善。</field>
+                                <field name="FONT_SIZE">14</field>
+                                <field name="COLOR">#4b5563</field>
+                                <field name="ALIGN">left</field>
+                              </block>
+                            </statement>
+                          </block>
+                        </next>
+                      </block>
+                    </statement>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+</xml>`,
+  shop: `
+<xml xmlns="https://developers.google.com/blockly/xml">
+  <block type="page_root" x="20" y="20">
+    <field name="TITLE">Local Shop</field>
+    <field name="FONT_SIZE">16</field>
+    <field name="BG_COLOR">#fffdf7</field>
+    <field name="TEXT_COLOR">#2f2f2f</field>
+    <statement name="CONTENT">
+      <block type="comp_hero">
+        <field name="TITLE">こだわりの焼き菓子</field>
+        <field name="SUBTITLE">毎日手作り、季節の素材をお届けします</field>
+        <field name="BTN_TEXT">メニューを見る</field>
+        <field name="BTN_URL">#menu</field>
+        <field name="BG_COLOR">#f59e0b</field>
+        <next>
+          <block type="page_main">
+            <statement name="CONTENT">
+              <block type="text_heading">
+                <field name="LEVEL">2</field>
+                <field name="TEXT">人気メニュー</field>
+                <field name="COLOR">#92400e</field>
+                <field name="ALIGN">center</field>
+                <next>
+                  <block type="comp_grid">
+                    <field name="COLS">3</field>
+                    <statement name="CONTENT">
+                      <block type="comp_card">
+                        <field name="TITLE">フィナンシェ</field>
+                        <statement name="CONTENT">
+                          <block type="text_paragraph">
+                            <field name="TEXT">焦がしバター香る定番人気。</field>
+                            <field name="FONT_SIZE">14</field>
+                            <field name="COLOR">#92400e</field>
+                            <field name="ALIGN">left</field>
+                          </block>
+                        </statement>
+                        <next>
+                          <block type="comp_card">
+                            <field name="TITLE">クッキー缶</field>
+                            <statement name="CONTENT">
+                              <block type="text_paragraph">
+                                <field name="TEXT">ギフトに最適な詰め合わせ。</field>
+                                <field name="FONT_SIZE">14</field>
+                                <field name="COLOR">#92400e</field>
+                                <field name="ALIGN">left</field>
+                              </block>
+                            </statement>
+                          </block>
+                        </next>
+                      </block>
+                    </statement>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+</xml>`
+};
+
+const PROJECT_VERSION = 1;
+const LOCAL_PROJECT_KEY = 'block-editor:autosave-v1';
+
 // ──────────────────────────────────────────────────────────────
 //  Helpers
 // ──────────────────────────────────────────────────────────────
 
 let workspace = null;
+let statusTimer = null;
 
 /** Simple debounce to avoid flooding the preview on rapid edits. */
 function debounce(fn, delay) {
@@ -133,6 +263,36 @@ function emptyPageHTML() {
   <p>🧩 ブロックを追加してWebサイトを作りましょう！</p>
 </body>
 </html>`;
+}
+
+function showStatus(message, sticky = false) {
+  const el = document.getElementById('statusMessage');
+  if (!el) return;
+  el.textContent = message;
+  if (statusTimer) clearTimeout(statusTimer);
+  if (!sticky) {
+    statusTimer = setTimeout(() => {
+      el.textContent = '準備完了';
+    }, 2000);
+  }
+}
+
+function updateStatusMeta() {
+  const meta = document.getElementById('statusMeta');
+  if (!meta || !workspace) return;
+  const count = workspace.getAllBlocks(false).length;
+  meta.textContent = `ブロック数: ${count}`;
+}
+
+function workspaceToXmlText() {
+  const dom = Blockly.Xml.workspaceToDom(workspace);
+  return Blockly.Xml.domToText(dom);
+}
+
+function loadXmlText(xmlText) {
+  const dom = Blockly.utils.xml.textToDom(xmlText);
+  workspace.clear();
+  Blockly.Xml.domToWorkspace(dom, workspace);
 }
 
 // ──────────────────────────────────────────────────────────────
@@ -195,6 +355,7 @@ function updatePreview() {
 
   if (previewBlobUrl) URL.revokeObjectURL(previewBlobUrl);
   previewBlobUrl = newUrl;
+  updateStatusMeta();
 }
 
 // ──────────────────────────────────────────────────────────────
@@ -212,6 +373,125 @@ function exportHTML() {
   a.click();
   document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(url), 1500);
+  showStatus('HTMLを書き出しました');
+}
+
+function saveProjectFile() {
+  const payload = {
+    app: 'Block Website Editor',
+    version: PROJECT_VERSION,
+    savedAt: new Date().toISOString(),
+    workspaceXml: workspaceToXmlText()
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'project.blocksite.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+  showStatus('プロジェクトを保存しました');
+}
+
+function saveProjectToLocal() {
+  localStorage.setItem(LOCAL_PROJECT_KEY, workspaceToXmlText());
+}
+
+function restoreProjectFromLocal() {
+  const savedXml = localStorage.getItem(LOCAL_PROJECT_KEY);
+  if (!savedXml) {
+    loadXmlText(STARTER_XML);
+    return;
+  }
+  try {
+    loadXmlText(savedXml);
+    showStatus('前回の作業内容を復元しました', true);
+  } catch (error) {
+    console.warn('Failed to restore from local storage:', error);
+    loadXmlText(STARTER_XML);
+  }
+}
+
+function loadProjectObject(project) {
+  if (!project || typeof project.workspaceXml !== 'string') {
+    throw new Error('Invalid project file');
+  }
+  loadXmlText(project.workspaceXml);
+  updatePreview();
+  showStatus('プロジェクトを読み込みました');
+}
+
+function handleProjectFileSelect(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const text = String(reader.result || '');
+      const parsed = JSON.parse(text);
+      loadProjectObject(parsed);
+    } catch (error) {
+      console.error('Failed to load project file:', error);
+      window.alert('プロジェクトの読み込みに失敗しました。JSON形式を確認してください。');
+    }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function applyTemplate(templateKey) {
+  const xml = TEMPLATE_XML[templateKey];
+  if (!xml) return;
+  if (!window.confirm('現在の内容をテンプレートに置き換えますか？')) return;
+  loadXmlText(xml);
+  updatePreview();
+  showStatus(`テンプレート「${templateKey}」を適用しました`);
+}
+
+function setViewport(mode) {
+  const frame = document.getElementById('previewFrame');
+  frame.classList.remove('device-tablet', 'device-mobile');
+  if (mode === 'tablet') frame.classList.add('device-tablet');
+  if (mode === 'mobile') frame.classList.add('device-mobile');
+}
+
+function setupViewportButtons() {
+  document.querySelectorAll('.viewport-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.viewport-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      setViewport(btn.dataset.viewport);
+    });
+  });
+}
+
+function setupKeyboardShortcuts() {
+  document.addEventListener('keydown', event => {
+    const mod = event.metaKey || event.ctrlKey;
+    if (!mod) return;
+
+    if (event.key.toLowerCase() === 's') {
+      event.preventDefault();
+      exportHTML();
+      return;
+    }
+    if (event.key.toLowerCase() === 'e') {
+      event.preventDefault();
+      saveProjectFile();
+      return;
+    }
+    if (event.key.toLowerCase() === 'o') {
+      event.preventDefault();
+      document.getElementById('projectFileInput').click();
+      return;
+    }
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      updatePreview();
+    }
+  });
 }
 
 // ──────────────────────────────────────────────────────────────
@@ -256,17 +536,17 @@ function initWorkspace() {
   if (theme) config.theme = theme;
 
   workspace = Blockly.inject('blocklyDiv', config);
+  restoreProjectFromLocal();
 
-  // Load starter template
-  try {
-    const dom = Blockly.utils.xml.textToDom(STARTER_XML);
-    Blockly.Xml.domToWorkspace(dom, workspace);
-  } catch (e) {
-    console.warn('Failed to load starter template:', e);
-  }
-
-  // Auto-preview on edits (debounced — 400ms balances responsiveness with performance)
-  workspace.addChangeListener(debounce(updatePreview, 400));
+  // Auto-preview + auto-save on edits
+  const syncWorkspace = debounce(() => {
+    updatePreview();
+    saveProjectToLocal();
+  }, 400);
+  workspace.addChangeListener(event => {
+    if (event && event.type === Blockly.Events.UI) return;
+    syncWorkspace();
+  });
 
   // Initial render
   setTimeout(updatePreview, 150);
@@ -277,9 +557,9 @@ function initWorkspace() {
 // ──────────────────────────────────────────────────────────────
 
 function setupTabs() {
-  document.querySelectorAll('.tab-btn').forEach(btn => {
+  document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-btn[data-tab]').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
       const isPreview = btn.dataset.tab === 'preview';
@@ -354,12 +634,32 @@ function setupResizeObserver() {
 // ──────────────────────────────────────────────────────────────
 
 function setupButtons() {
+  document.getElementById('btnUndo').addEventListener('click', () => workspace.undo(false));
+  document.getElementById('btnRedo').addEventListener('click', () => workspace.undo(true));
+  document.getElementById('btnNew').addEventListener('click', () => {
+    if (!window.confirm('新規プロジェクトを作成しますか？\n現在の内容は置き換えられます。')) return;
+    loadXmlText(STARTER_XML);
+    updatePreview();
+    saveProjectToLocal();
+    showStatus('新規プロジェクトを作成しました');
+  });
+  document.getElementById('btnSaveProject').addEventListener('click', saveProjectFile);
+  document.getElementById('btnLoadProject').addEventListener('click', () => {
+    document.getElementById('projectFileInput').click();
+  });
+  document.getElementById('projectFileInput').addEventListener('change', handleProjectFileSelect);
+  document.getElementById('templateSelect').addEventListener('change', event => {
+    applyTemplate(event.target.value);
+    event.target.value = '';
+  });
   document.getElementById('btnPreview').addEventListener('click', updatePreview);
   document.getElementById('btnExport').addEventListener('click', exportHTML);
   document.getElementById('btnClear').addEventListener('click', () => {
     if (window.confirm('ワークスペースをクリアしますか？\nこの操作は元に戻せません。')) {
       workspace.clear();
       updatePreview();
+      saveProjectToLocal();
+      showStatus('ワークスペースをクリアしました');
     }
   });
 }
@@ -371,7 +671,9 @@ function setupButtons() {
 document.addEventListener('DOMContentLoaded', () => {
   initWorkspace();
   setupTabs();
+  setupViewportButtons();
   setupResizeHandle();
   setupResizeObserver();
   setupButtons();
+  setupKeyboardShortcuts();
 });

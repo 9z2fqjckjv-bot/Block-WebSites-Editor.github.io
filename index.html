@@ -15,15 +15,30 @@
       <span class="brand-tagline">ブロックでWebサイトを作ろう</span>
     </div>
     <div class="app-actions">
-      <button id="btnPreview" class="btn btn-secondary" title="プレビューを手動更新">
-        🔄 プレビュー更新
-      </button>
-      <button id="btnExport" class="btn btn-primary" title="HTMLファイルをダウンロード">
-        💾 HTMLダウンロード
-      </button>
-      <button id="btnClear" class="btn btn-danger" title="ワークスペースをすべてクリア">
-        🗑 クリア
-      </button>
+      <div class="action-group">
+        <button id="btnUndo" class="btn btn-secondary" title="元に戻す (Ctrl/Cmd+Z)">↶ Undo</button>
+        <button id="btnRedo" class="btn btn-secondary" title="やり直し (Ctrl/Cmd+Shift+Z)">↷ Redo</button>
+      </div>
+      <div class="action-group">
+        <button id="btnNew" class="btn btn-secondary" title="新しいプロジェクトを作成">🆕 新規</button>
+        <button id="btnSaveProject" class="btn btn-secondary" title="プロジェクトをJSONで保存">📦 保存</button>
+        <button id="btnLoadProject" class="btn btn-secondary" title="保存したJSONを読み込む">📂 読込</button>
+        <input id="projectFileInput" type="file" accept=".json,application/json" hidden>
+      </div>
+      <div class="action-group">
+        <label for="templateSelect" class="toolbar-label">テンプレート</label>
+        <select id="templateSelect" class="toolbar-select" title="テンプレートから開始">
+          <option value="">選択...</option>
+          <option value="starter">スターター</option>
+          <option value="portfolio">ポートフォリオ</option>
+          <option value="shop">ショップ紹介</option>
+        </select>
+      </div>
+      <div class="action-group">
+        <button id="btnPreview" class="btn btn-secondary" title="プレビューを手動更新">🔄 プレビュー更新</button>
+        <button id="btnExport" class="btn btn-primary" title="HTMLファイルをダウンロード">💾 HTML</button>
+        <button id="btnClear" class="btn btn-danger" title="ワークスペースをすべてクリア">🗑 クリア</button>
+      </div>
     </div>
   </header>
 
@@ -47,6 +62,9 @@
       <div class="panel-toolbar">
         <span class="panel-title">👁 プレビュー</span>
         <div class="tab-bar">
+          <button class="tab-btn viewport-btn active" data-viewport="desktop">🖥</button>
+          <button class="tab-btn viewport-btn" data-viewport="tablet">📱</button>
+          <button class="tab-btn viewport-btn" data-viewport="mobile">📲</button>
           <button class="tab-btn active" data-tab="preview">ビジュアル</button>
           <button class="tab-btn" data-tab="code">HTMLコード</button>
         </div>
@@ -63,6 +81,11 @@
     </div>
 
   </div>
+  <footer class="status-bar">
+    <span id="statusMessage">準備完了</span>
+    <span id="statusMeta">ブロック数: 0</span>
+    <span class="status-shortcuts">保存: Ctrl/Cmd+S | プレビュー: Ctrl/Cmd+Enter</span>
+  </footer>
 
   <!-- Blockly core (v10.4.3) — update all three tags together when upgrading -->
   <script src="https://unpkg.com/blockly@10.4.3/blockly_compressed.js"></script>

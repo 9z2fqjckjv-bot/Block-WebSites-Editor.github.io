@@ -41,6 +41,28 @@ function isDark(hex) {
   return (r * 299 + g * 587 + b * 114) / 1000 < 128;
 }
 
+function getAlignStyle(align, isButton) {
+  if (isButton) {
+    if (align === 'center') return 'display:block; width:fit-content; margin-left:auto; margin-right:auto;';
+    if (align === 'right') return 'display:block; width:fit-content; margin-left:auto; margin-right:0;';
+    return 'display:inline-block;';
+  }
+
+  if (align === 'center') return 'display:block; margin-left:auto; margin-right:auto;';
+  if (align === 'right') return 'display:block; margin-left:auto; margin-right:0;';
+  return 'display:block;';
+}
+
+function getPresentationStyle(block, isButton = false) {
+  const align = block.getFieldValue('ALIGN') || 'left';
+  const position = block.getFieldValue('POSITION') || 'static';
+  const offsetX = esc(block.getFieldValue('OFFSET_X') || '0px');
+  const offsetY = esc(block.getFieldValue('OFFSET_Y') || '0px');
+  const zIndex = Number(block.getFieldValue('Z_INDEX') || 1);
+  const offsetStyle = position === 'static' ? '' : ` left:${offsetX}; top:${offsetY};`;
+  return `${getAlignStyle(align, isButton)} position:${position};${offsetStyle} z-index:${zIndex};`;
+}
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  PAGE STRUCTURE
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -169,7 +191,8 @@ htmlGen.forBlock['media_image'] = function (block) {
   const alt    = esc(block.getFieldValue('ALT'));
   const width  = esc(block.getFieldValue('WIDTH'));
   const height = esc(block.getFieldValue('HEIGHT'));
-  return `<img src="${src}" alt="${alt}" style="width:${width}; height:${height};">\n`;
+  const style  = getPresentationStyle(block);
+  return `<img src="${src}" alt="${alt}" style="width:${width}; height:${height}; ${style}">\n`;
 };
 
 htmlGen.forBlock['media_separator'] = function () {
@@ -193,7 +216,8 @@ htmlGen.forBlock['link_button'] = function (block) {
   const href    = esc(block.getFieldValue('HREF'));
   const bg      = block.getFieldValue('BG_COLOR');
   const fg      = block.getFieldValue('TEXT_COLOR');
-  return `<a href="${href}" style="display:inline-block; padding:.6em 1.4em; background-color:${bg}; color:${fg}; text-decoration:none; border-radius:6px; font-weight:700;">${text}</a>\n`;
+  const style   = getPresentationStyle(block, true);
+  return `<a href="${href}" style="${style} padding:.6em 1.4em; background-color:${bg}; color:${fg}; text-decoration:none; border-radius:6px; font-weight:700;">${text}</a>\n`;
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

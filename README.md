@@ -16,6 +16,7 @@
 | ↶ Undo / ↷ Redo | Scratchライクに試行錯誤しやすい操作性 |
 | 🧭 配置カスタマイズ | 画像・ボタンの左寄せ/中央/右寄せ、相対/絶対/固定配置、重なり順(z-index)に対応 |
 | 🖼 画像の表示切替・リンク化 | 画像ごとに表示/非表示を設定し、クリック時の遷移先URLを指定可能 |
+| 🧾 表示中画像の抽出 | 現在表示されている画像（複数可）を抽出し、プロジェクトJSONへ保存 |
 | 📱 端末プレビュー切替 | PC / タブレット / モバイル幅をワンクリック確認 |
 | 📱 レスポンシブ | モバイル対応のCSSグリッドを自動生成 |
 | 🌐 ゼロ依存 | CDN上のBlocklyのみ使用・インストール不要 |
@@ -73,7 +74,36 @@ js/
   toolbox.js        # Blocklyツールボックス設定
   blocks.js         # カスタムブロック定義
   generators.js     # ブロック → HTML コード生成
+  image-extractor.js# 表示中画像の抽出ユーティリティ
   app.js            # アプリ初期化・プレビュー・エクスポート
+```
+
+## 🖼 表示中画像抽出の呼び出しコード
+
+### HTML（`index.html`）
+
+`app.js` から利用するため、`image-extractor.js` を先に読み込みます。
+
+```html
+<script src="js/toolbox.js"></script>
+<script src="js/blocks.js"></script>
+<script src="js/generators.js"></script>
+<script src="js/image-extractor.js"></script>
+<script src="js/app.js"></script>
+```
+
+### JSON（プロジェクト保存データ）
+
+保存時に `visibleImages` へ表示中画像の一覧を格納します。
+
+```js
+const payload = {
+  app: 'Block Website Editor',
+  version: PROJECT_VERSION,
+  savedAt: new Date().toISOString(),
+  workspaceXml: workspaceToXmlText(),
+  visibleImages: getVisibleImagesSnapshot(html)
+};
 ```
 
 ## 🔧 開発

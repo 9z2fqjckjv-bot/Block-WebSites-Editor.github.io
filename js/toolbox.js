@@ -41,7 +41,8 @@ const TOOLBOX = {
       colour: '#9B59B6',
       contents: [
         { kind: 'block', type: 'media_image' },
-        { kind: 'block', type: 'media_separator' }
+        { kind: 'block', type: 'media_separator' },
+        { kind: 'block', type: 'media_embed_html' }
       ]
     },
 

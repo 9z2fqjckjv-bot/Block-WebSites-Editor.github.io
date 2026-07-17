@@ -187,12 +187,21 @@ htmlGen.forBlock['text_raw'] = function (block) {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 htmlGen.forBlock['media_image'] = function (block) {
-  const src    = esc(block.getFieldValue('SRC'));
-  const alt    = esc(block.getFieldValue('ALT'));
-  const width  = esc(block.getFieldValue('WIDTH'));
-  const height = esc(block.getFieldValue('HEIGHT'));
-  const style  = getPresentationStyle(block);
-  return `<img src="${src}" alt="${alt}" style="width:${width}; height:${height}; ${style}">\n`;
+  const src        = esc(block.getFieldValue('SRC'));
+  const alt        = esc(block.getFieldValue('ALT'));
+  const width      = esc(block.getFieldValue('WIDTH'));
+  const height     = esc(block.getFieldValue('HEIGHT'));
+  const style      = getPresentationStyle(block);
+  const visibility = block.getFieldValue('VISIBILITY') || 'visible';
+  const hrefRaw    = String(block.getFieldValue('HREF') || '').trim();
+  const href       = esc(hrefRaw);
+  const newTab     = block.getFieldValue('NEW_TAB') === 'TRUE';
+  const target     = newTab ? ' target="_blank" rel="noopener noreferrer"' : '';
+  const display    = visibility === 'hidden' ? ' display:none;' : '';
+  const imageTag   = `<img src="${src}" alt="${alt}" style="width:${width}; height:${height}; ${style}${display}">`;
+
+  if (!hrefRaw) return `${imageTag}\n`;
+  return `<a href="${href}"${target}>${imageTag}</a>\n`;
 };
 
 htmlGen.forBlock['media_separator'] = function () {

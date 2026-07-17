@@ -208,6 +208,11 @@ htmlGen.forBlock['media_separator'] = function () {
   return '<hr>\n';
 };
 
+htmlGen.forBlock['media_embed_html'] = function (block) {
+  // Intentionally unsanitized to allow full custom embeds.
+  return `${block.getFieldValue('HTML')}\n`;
+};
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  LINKS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

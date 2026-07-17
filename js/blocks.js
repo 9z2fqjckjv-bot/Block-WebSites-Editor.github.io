@@ -260,6 +260,20 @@ Blockly.defineBlocksWithJsonArray([
     'helpUrl': ''
   },
 
+  // Raw embedded HTML
+  {
+    'type': 'media_embed_html',
+    'message0': '🧩 カスタムHTML埋め込み\nHTMLコード: %1',
+    'args0': [
+      { 'type': 'field_multilinetext', 'name': 'HTML', 'text': '<iframe src="https://example.com" width="100%" height="400"></iframe>' }
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    'colour': 270,
+    'tooltip': '任意のHTMLコードをそのまま出力します（iframe / script など）',
+    'helpUrl': ''
+  },
+
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   //  LINKS
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

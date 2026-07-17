@@ -202,7 +202,7 @@ Blockly.defineBlocksWithJsonArray([
   // <img>
   {
     'type': 'media_image',
-    'message0': '🖼 画像\nURL: %1\n説明(alt): %2\n幅: %3  高さ: %4\n揃え: %5  配置: %6\nX: %7  Y: %8  重なり順(z): %9',
+    'message0': '🖼 画像\nURL: %1\n説明(alt): %2\n幅: %3  高さ: %4\n揃え: %5  配置: %6\nX: %7  Y: %8\n表示: %9  重なり順(z): %10\nリンクURL: %11  新しいタブ: %12',
     'args0': [
       { 'type': 'field_input', 'name': 'SRC',    'text': 'https://placehold.co/600x300' },
       { 'type': 'field_input', 'name': 'ALT',    'text': '画像の説明' },
@@ -229,7 +229,17 @@ Blockly.defineBlocksWithJsonArray([
       },
       { 'type': 'field_input',  'name': 'OFFSET_X', 'text': '0px' },
       { 'type': 'field_input',  'name': 'OFFSET_Y', 'text': '0px' },
-      { 'type': 'field_number', 'name': 'Z_INDEX',  'value': 1, 'min': -9999, 'max': 9999 }
+      {
+        'type': 'field_dropdown',
+        'name': 'VISIBILITY',
+        'options': [
+          ['表示', 'visible'],
+          ['非表示', 'hidden']
+        ]
+      },
+      { 'type': 'field_number',   'name': 'Z_INDEX',  'value': 1, 'min': -9999, 'max': 9999 },
+      { 'type': 'field_input',    'name': 'HREF',     'text': '' },
+      { 'type': 'field_checkbox', 'name': 'NEW_TAB',  'checked': false }
     ],
     'previousStatement': null,
     'nextStatement': null,

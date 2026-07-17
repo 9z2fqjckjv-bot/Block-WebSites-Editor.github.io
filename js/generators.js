@@ -63,6 +63,64 @@ function getPresentationStyle(block, isButton = false) {
   return `${getAlignStyle(align, isButton)} position:${position};${offsetStyle} z-index:${zIndex};`;
 }
 
+function isChecked(block, fieldName) {
+  return block.getFieldValue(fieldName) === 'TRUE';
+}
+
+function toEmbedDimension(value, fallback) {
+  const raw = String(value || '').trim();
+  return esc(raw || fallback);
+}
+
+function toSafeId(value) {
+  return String(value || '')
+    .replace(/[^a-zA-Z0-9_-]/g, '_')
+    .slice(0, 64);
+}
+
+function normalizeGoogleEmbedUrl(rawUrl, kind) {
+  let parsed;
+  try {
+    parsed = new URL(String(rawUrl || '').trim());
+  } catch {
+    return String(rawUrl || '').trim();
+  }
+
+  if (parsed.hostname !== 'docs.google.com') return parsed.toString();
+  const match = parsed.pathname.match(/^\/(document|spreadsheets|presentation)\/d\/([^/]+)/);
+  if (!match) return parsed.toString();
+  const fileId = match[2];
+
+  if (kind === 'google-docs') return `https://docs.google.com/document/d/${fileId}/preview`;
+  if (kind === 'google-sheets') return `https://docs.google.com/spreadsheets/d/${fileId}/preview`;
+  if (kind === 'google-slides') {
+    return `https://docs.google.com/presentation/d/${fileId}/embed?start=false&loop=false&delayms=3000`;
+  }
+
+  return parsed.toString();
+}
+
+function resolveEmbedSrc(rawUrl, kind) {
+  const url = String(rawUrl || '').trim();
+  if (!url) return '';
+  if (kind === 'word' || kind === 'excel' || kind === 'powerpoint') {
+    return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
+  }
+  if (kind === 'google-docs' || kind === 'google-sheets' || kind === 'google-slides') {
+    return normalizeGoogleEmbedUrl(url, kind);
+  }
+  return url;
+}
+
+function mediaFrame(title, sourceUrl, width, height, fallbackLinkUrl = sourceUrl) {
+  const src = esc(sourceUrl);
+  const fallbackUrl = esc(fallbackLinkUrl || sourceUrl);
+  return `<figure style="margin:1rem 0;">
+  <iframe title="${esc(title)}" src="${src}" style="width:${width}; height:${height}; border:1px solid #d1d5db; border-radius:8px; background:#fff;" loading="lazy"></iframe>
+  <figcaption style="font-size:.9rem; margin-top:.4rem; color:#4b5563;">表示できない場合は <a href="${fallbackUrl}" target="_blank" rel="noopener noreferrer">${esc(title)}を開く</a></figcaption>
+</figure>\n`;
+}
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  PAGE STRUCTURE
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -202,6 +260,118 @@ htmlGen.forBlock['media_image'] = function (block) {
 
   if (!hrefRaw) return `${imageTag}\n`;
   return `<a href="${href}"${target}>${imageTag}</a>\n`;
+};
+
+htmlGen.forBlock['media_audio'] = function (block) {
+  const src = esc(block.getFieldValue('SRC'));
+  const controls = isChecked(block, 'CONTROLS');
+  const autoplay = isChecked(block, 'AUTOPLAY');
+  const loop = isChecked(block, 'LOOP');
+  const controlsAttr = controls ? ' controls' : '';
+  const autoplayAttr = autoplay ? ' autoplay' : '';
+  const loopAttr = loop ? ' loop' : '';
+  return `<audio src="${src}"${controlsAttr}${autoplayAttr}${loopAttr} style="width:100%; max-width:720px;">お使いのブラウザは audio 要素に対応していません。</audio>\n`;
+};
+
+htmlGen.forBlock['media_video'] = function (block) {
+  const src = esc(block.getFieldValue('SRC'));
+  const width = toEmbedDimension(block.getFieldValue('WIDTH'), '100%');
+  const height = toEmbedDimension(block.getFieldValue('HEIGHT'), '360px');
+  const controls = isChecked(block, 'CONTROLS');
+  const autoplay = isChecked(block, 'AUTOPLAY');
+  const loop = isChecked(block, 'LOOP');
+  const controlsAttr = controls ? ' controls' : '';
+  const autoplayAttr = autoplay ? ' autoplay muted playsinline' : '';
+  const loopAttr = loop ? ' loop' : '';
+  return `<video src="${src}" style="width:${width}; height:${height}; max-width:100%; border-radius:8px;"${controlsAttr}${autoplayAttr}${loopAttr}>お使いのブラウザは video 要素に対応していません。</video>\n`;
+};
+
+htmlGen.forBlock['media_document'] = function (block) {
+  const type = block.getFieldValue('DOC_TYPE') || 'word';
+  const url = String(block.getFieldValue('URL') || '').trim();
+  const width = toEmbedDimension(block.getFieldValue('WIDTH'), '100%');
+  const height = toEmbedDimension(block.getFieldValue('HEIGHT'), '500px');
+  const src = resolveEmbedSrc(url, type);
+  const title = type === 'google-docs' ? 'Googleドキュメント' : type === 'pages' ? 'Pages' : 'Word';
+  if (!src) return '';
+  return mediaFrame(title, src, width, height, url);
+};
+
+htmlGen.forBlock['media_spreadsheet'] = function (block) {
+  const type = block.getFieldValue('SHEET_TYPE') || 'excel';
+  const url = String(block.getFieldValue('URL') || '').trim();
+  const width = toEmbedDimension(block.getFieldValue('WIDTH'), '100%');
+  const height = toEmbedDimension(block.getFieldValue('HEIGHT'), '500px');
+  const src = resolveEmbedSrc(url, type);
+  const title = type === 'google-sheets' ? 'Googleスプレッドシート' : type === 'numbers' ? 'Numbers' : 'Excel';
+  if (!src) return '';
+  return mediaFrame(title, src, width, height, url);
+};
+
+htmlGen.forBlock['media_presentation'] = function (block) {
+  const type = block.getFieldValue('PRESENTATION_TYPE') || 'powerpoint';
+  const url = String(block.getFieldValue('URL') || '').trim();
+  const width = toEmbedDimension(block.getFieldValue('WIDTH'), '100%');
+  const height = toEmbedDimension(block.getFieldValue('HEIGHT'), '500px');
+  const src = resolveEmbedSrc(url, type);
+  const title = type === 'google-slides' ? 'Googleスライド' : type === 'keynote' ? 'Keynote' : 'PowerPoint';
+  if (!src) return '';
+  return mediaFrame(title, src, width, height, url);
+};
+
+htmlGen.forBlock['media_pdf'] = function (block) {
+  const url = String(block.getFieldValue('URL') || '').trim();
+  const width = toEmbedDimension(block.getFieldValue('WIDTH'), '100%');
+  const height = toEmbedDimension(block.getFieldValue('HEIGHT'), '600px');
+  if (!url) return '';
+  return mediaFrame('PDF', url, width, height, url);
+};
+
+htmlGen.forBlock['media_text_file'] = function (block) {
+  const url = String(block.getFieldValue('URL') || '').trim();
+  const textType = block.getFieldValue('TEXT_TYPE') || 'txt';
+  if (!url) return '';
+  const viewerId = `text-media-${toSafeId(block.id)}`;
+  const sourceUrl = JSON.stringify(url);
+  const label = textType === 'md' ? 'Markdown (.md)' : 'Text (.txt)';
+  return `<section style="margin:1rem 0;">
+  <h4 style="margin:0 0 .5rem 0;">${esc(label)}</h4>
+  <pre id="${viewerId}" style="white-space:pre-wrap; word-break:break-word; background:#111827; color:#f9fafb; padding:1rem; border-radius:8px; overflow:auto; max-height:420px;">読み込み中...</pre>
+  <script>
+    (function () {
+      const target = document.getElementById('${viewerId}');
+      const sourceUrl = ${sourceUrl};
+      fetch(sourceUrl)
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to load text file');
+          return response.text();
+        })
+        .then(text => { target.textContent = text; })
+        .catch(() => {
+          target.textContent = '読み込みに失敗しました。';
+          const link = document.createElement('a');
+          link.href = sourceUrl;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          link.textContent = 'ファイルを別タブで開く';
+          link.style.display = 'block';
+          link.style.marginTop = '.5rem';
+          target.insertAdjacentElement('afterend', link);
+        });
+    })();
+  </script>
+</section>\n`;
+};
+
+htmlGen.forBlock['media_google_apps_script'] = function (block) {
+  const url = String(block.getFieldValue('URL') || '').trim();
+  const width = toEmbedDimension(block.getFieldValue('WIDTH'), '100%');
+  const height = toEmbedDimension(block.getFieldValue('HEIGHT'), '500px');
+  if (!url) return '';
+  return `<figure style="margin:1rem 0;">
+  <iframe title="Google Apps Script" src="${esc(url)}" style="width:${width}; height:${height}; border:1px solid #d1d5db; border-radius:8px; background:#fff;" loading="lazy"></iframe>
+  <figcaption style="font-size:.9rem; margin-top:.4rem; color:#4b5563;">動作しない場合はスクリプトの公開設定（ウェブアプリ）を確認してください。</figcaption>
+</figure>\n`;
 };
 
 htmlGen.forBlock['media_separator'] = function () {

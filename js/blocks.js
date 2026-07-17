@@ -248,6 +248,171 @@ Blockly.defineBlocksWithJsonArray([
     'helpUrl': ''
   },
 
+  // <audio>
+  {
+    'type': 'media_audio',
+    'message0': '🔊 音声\nURL: %1\ncontrols: %2  autoplay: %3  loop: %4',
+    'args0': [
+      { 'type': 'field_input', 'name': 'SRC', 'text': 'https://www.w3schools.com/html/horse.mp3' },
+      { 'type': 'field_checkbox', 'name': 'CONTROLS', 'checked': true },
+      { 'type': 'field_checkbox', 'name': 'AUTOPLAY', 'checked': false },
+      { 'type': 'field_checkbox', 'name': 'LOOP', 'checked': false }
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    'colour': 270,
+    'tooltip': '<audio> 音声ファイルを再生',
+    'helpUrl': ''
+  },
+
+  // <video>
+  {
+    'type': 'media_video',
+    'message0': '🎬 動画\nURL: %1\n幅: %2  高さ: %3\ncontrols: %4  autoplay: %5  loop: %6',
+    'args0': [
+      { 'type': 'field_input', 'name': 'SRC', 'text': 'https://www.w3schools.com/html/mov_bbb.mp4' },
+      { 'type': 'field_input', 'name': 'WIDTH', 'text': '100%' },
+      { 'type': 'field_input', 'name': 'HEIGHT', 'text': '360px' },
+      { 'type': 'field_checkbox', 'name': 'CONTROLS', 'checked': true },
+      { 'type': 'field_checkbox', 'name': 'AUTOPLAY', 'checked': false },
+      { 'type': 'field_checkbox', 'name': 'LOOP', 'checked': false }
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    'colour': 270,
+    'tooltip': '<video> 動画ファイルを再生',
+    'helpUrl': ''
+  },
+
+  // Documents (Word, Google Docs, Pages)
+  {
+    'type': 'media_document',
+    'message0': '📄 ドキュメント\n種類: %1\nURL: %2\n幅: %3  高さ: %4',
+    'args0': [
+      {
+        'type': 'field_dropdown',
+        'name': 'DOC_TYPE',
+        'options': [
+          ['Word', 'word'],
+          ['Googleドキュメント', 'google-docs'],
+          ['Pages', 'pages']
+        ]
+      },
+      { 'type': 'field_input', 'name': 'URL', 'text': 'https://example.com/document.docx' },
+      { 'type': 'field_input', 'name': 'WIDTH', 'text': '100%' },
+      { 'type': 'field_input', 'name': 'HEIGHT', 'text': '500px' }
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    'colour': 270,
+    'tooltip': 'Word / Googleドキュメント / Pages を埋め込み表示',
+    'helpUrl': ''
+  },
+
+  // Spreadsheets (Excel, Google Sheets, Numbers)
+  {
+    'type': 'media_spreadsheet',
+    'message0': '📊 表計算シート\n種類: %1\nURL: %2\n幅: %3  高さ: %4',
+    'args0': [
+      {
+        'type': 'field_dropdown',
+        'name': 'SHEET_TYPE',
+        'options': [
+          ['Excel', 'excel'],
+          ['Googleスプレッドシート', 'google-sheets'],
+          ['Numbers', 'numbers']
+        ]
+      },
+      { 'type': 'field_input', 'name': 'URL', 'text': 'https://example.com/sheet.xlsx' },
+      { 'type': 'field_input', 'name': 'WIDTH', 'text': '100%' },
+      { 'type': 'field_input', 'name': 'HEIGHT', 'text': '500px' }
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    'colour': 270,
+    'tooltip': 'Excel / Googleスプレッドシート / Numbers を埋め込み表示',
+    'helpUrl': ''
+  },
+
+  // Presentations (PowerPoint, Google Slides, Keynote)
+  {
+    'type': 'media_presentation',
+    'message0': '📽 プレゼンテーション\n種類: %1\nURL: %2\n幅: %3  高さ: %4',
+    'args0': [
+      {
+        'type': 'field_dropdown',
+        'name': 'PRESENTATION_TYPE',
+        'options': [
+          ['PowerPoint', 'powerpoint'],
+          ['Googleスライド', 'google-slides'],
+          ['Keynote', 'keynote']
+        ]
+      },
+      { 'type': 'field_input', 'name': 'URL', 'text': 'https://example.com/slides.pptx' },
+      { 'type': 'field_input', 'name': 'WIDTH', 'text': '100%' },
+      { 'type': 'field_input', 'name': 'HEIGHT', 'text': '500px' }
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    'colour': 270,
+    'tooltip': 'PowerPoint / Googleスライド / Keynote を埋め込み表示',
+    'helpUrl': ''
+  },
+
+  // PDF
+  {
+    'type': 'media_pdf',
+    'message0': '📕 PDF\nURL: %1\n幅: %2  高さ: %3',
+    'args0': [
+      { 'type': 'field_input', 'name': 'URL', 'text': 'https://example.com/sample.pdf' },
+      { 'type': 'field_input', 'name': 'WIDTH', 'text': '100%' },
+      { 'type': 'field_input', 'name': 'HEIGHT', 'text': '600px' }
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    'colour': 270,
+    'tooltip': 'PDFドキュメントを埋め込み表示',
+    'helpUrl': ''
+  },
+
+  // Text files (.txt / .md)
+  {
+    'type': 'media_text_file',
+    'message0': '📄 テキストファイル\nURL: %1\n種類: %2',
+    'args0': [
+      { 'type': 'field_input', 'name': 'URL', 'text': 'https://example.com/readme.md' },
+      {
+        'type': 'field_dropdown',
+        'name': 'TEXT_TYPE',
+        'options': [
+          ['txt', 'txt'],
+          ['md', 'md']
+        ]
+      }
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    'colour': 270,
+    'tooltip': 'txt / md ファイルを読み込み表示',
+    'helpUrl': ''
+  },
+
+  // Google Apps Script embed
+  {
+    'type': 'media_google_apps_script',
+    'message0': '🧪 Google Apps Script埋め込み\nWebアプリURL: %1\n幅: %2  高さ: %3',
+    'args0': [
+      { 'type': 'field_input', 'name': 'URL', 'text': 'https://script.google.com/macros/s/XXXXXXXXXXXXXXXX/exec' },
+      { 'type': 'field_input', 'name': 'WIDTH', 'text': '100%' },
+      { 'type': 'field_input', 'name': 'HEIGHT', 'text': '500px' }
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    'colour': 270,
+    'tooltip': 'Google Apps Script Webアプリをiframeで埋め込み',
+    'helpUrl': ''
+  },
+
   // <hr>
   {
     'type': 'media_separator',

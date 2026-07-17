@@ -376,12 +376,22 @@ function exportHTML() {
   showStatus('HTMLを書き出しました');
 }
 
+function getVisibleImagesSnapshot(html) {
+  const extractor = window.ImageExtractor;
+  if (!extractor || typeof extractor.extractVisibleImagesFromHTML !== 'function') {
+    return [];
+  }
+  return extractor.extractVisibleImagesFromHTML(html);
+}
+
 function saveProjectFile() {
+  const html = generateHTML();
   const payload = {
     app: 'Block Website Editor',
     version: PROJECT_VERSION,
     savedAt: new Date().toISOString(),
-    workspaceXml: workspaceToXmlText()
+    workspaceXml: workspaceToXmlText(),
+    visibleImages: getVisibleImagesSnapshot(html)
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' });
   const url = URL.createObjectURL(blob);

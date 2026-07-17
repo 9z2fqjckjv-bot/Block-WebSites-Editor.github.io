@@ -112,12 +112,16 @@ function resolveEmbedSrc(rawUrl, kind) {
   return url;
 }
 
-function mediaFrame(title, sourceUrl, width, height, fallbackLinkUrl = sourceUrl) {
+function mediaFrame(title, sourceUrl, width, height, fallbackLinkUrl = sourceUrl, href = '', newTab = false) {
   const src = esc(sourceUrl);
   const fallbackUrl = esc(fallbackLinkUrl || sourceUrl);
-  return `<figure style="margin:1rem 0;">
+  const overlayAnchor = href
+    ? `\n  <a href="${esc(href)}"${newTab ? ' target="_blank" rel="noopener noreferrer"' : ''} style="position:absolute; inset:0; z-index:2; display:block; cursor:pointer;" aria-label="${esc(title)}のリンクを開く"></a>`
+    : '';
+  const figureStyle = href ? 'position:relative; margin:1rem 0;' : 'margin:1rem 0;';
+  return `<figure style="${figureStyle}">
   <iframe title="${esc(title)}" src="${src}" style="width:${width}; height:${height}; border:1px solid #d1d5db; border-radius:8px; background:#fff;" loading="lazy"></iframe>
-  <figcaption style="font-size:.9rem; margin-top:.4rem; color:#4b5563;">表示できない場合は <a href="${fallbackUrl}" target="_blank" rel="noopener noreferrer">${esc(title)}を開く</a></figcaption>
+  <figcaption style="font-size:.9rem; margin-top:.4rem; color:#4b5563;">表示できない場合は <a href="${fallbackUrl}" target="_blank" rel="noopener noreferrer">${esc(title)}を開く</a></figcaption>${overlayAnchor}
 </figure>\n`;
 }
 
@@ -267,10 +271,16 @@ htmlGen.forBlock['media_audio'] = function (block) {
   const controls = isChecked(block, 'CONTROLS');
   const autoplay = isChecked(block, 'AUTOPLAY');
   const loop = isChecked(block, 'LOOP');
+  const hrefRaw = String(block.getFieldValue('HREF') || '').trim();
+  const href = esc(hrefRaw);
+  const newTab = block.getFieldValue('NEW_TAB') === 'TRUE';
+  const target = newTab ? ' target="_blank" rel="noopener noreferrer"' : '';
   const controlsAttr = controls ? ' controls' : '';
   const autoplayAttr = autoplay ? ' autoplay' : '';
   const loopAttr = loop ? ' loop' : '';
-  return `<audio src="${src}"${controlsAttr}${autoplayAttr}${loopAttr} style="width:100%; max-width:720px;">お使いのブラウザは audio 要素に対応していません。</audio>\n`;
+  const audioTag = `<audio src="${src}"${controlsAttr}${autoplayAttr}${loopAttr} style="width:100%; max-width:720px;">お使いのブラウザは audio 要素に対応していません。</audio>`;
+  if (!hrefRaw) return `${audioTag}\n`;
+  return `<a href="${href}"${target} style="display:block; max-width:720px;">${audioTag}</a>\n`;
 };
 
 htmlGen.forBlock['media_video'] = function (block) {
@@ -280,10 +290,16 @@ htmlGen.forBlock['media_video'] = function (block) {
   const controls = isChecked(block, 'CONTROLS');
   const autoplay = isChecked(block, 'AUTOPLAY');
   const loop = isChecked(block, 'LOOP');
+  const hrefRaw = String(block.getFieldValue('HREF') || '').trim();
+  const href = esc(hrefRaw);
+  const newTab = block.getFieldValue('NEW_TAB') === 'TRUE';
+  const target = newTab ? ' target="_blank" rel="noopener noreferrer"' : '';
   const controlsAttr = controls ? ' controls' : '';
   const autoplayAttr = autoplay ? ' autoplay muted playsinline' : '';
   const loopAttr = loop ? ' loop' : '';
-  return `<video src="${src}" style="width:${width}; height:${height}; max-width:100%; border-radius:8px;"${controlsAttr}${autoplayAttr}${loopAttr}>お使いのブラウザは video 要素に対応していません。</video>\n`;
+  const videoTag = `<video src="${src}" style="width:${width}; height:${height}; max-width:100%; border-radius:8px;"${controlsAttr}${autoplayAttr}${loopAttr}>お使いのブラウザは video 要素に対応していません。</video>`;
+  if (!hrefRaw) return `${videoTag}\n`;
+  return `<a href="${href}"${target} style="display:block;">${videoTag}</a>\n`;
 };
 
 htmlGen.forBlock['media_document'] = function (block) {
@@ -291,10 +307,12 @@ htmlGen.forBlock['media_document'] = function (block) {
   const url = String(block.getFieldValue('URL') || '').trim();
   const width = toEmbedDimension(block.getFieldValue('WIDTH'), '100%');
   const height = toEmbedDimension(block.getFieldValue('HEIGHT'), '500px');
+  const hrefRaw = String(block.getFieldValue('HREF') || '').trim();
+  const newTab = block.getFieldValue('NEW_TAB') === 'TRUE';
   const src = resolveEmbedSrc(url, type);
   const title = type === 'google-docs' ? 'Googleドキュメント' : type === 'pages' ? 'Pages' : 'Word';
   if (!src) return '';
-  return mediaFrame(title, src, width, height, url);
+  return mediaFrame(title, src, width, height, url, hrefRaw, newTab);
 };
 
 htmlGen.forBlock['media_spreadsheet'] = function (block) {
@@ -302,10 +320,12 @@ htmlGen.forBlock['media_spreadsheet'] = function (block) {
   const url = String(block.getFieldValue('URL') || '').trim();
   const width = toEmbedDimension(block.getFieldValue('WIDTH'), '100%');
   const height = toEmbedDimension(block.getFieldValue('HEIGHT'), '500px');
+  const hrefRaw = String(block.getFieldValue('HREF') || '').trim();
+  const newTab = block.getFieldValue('NEW_TAB') === 'TRUE';
   const src = resolveEmbedSrc(url, type);
   const title = type === 'google-sheets' ? 'Googleスプレッドシート' : type === 'numbers' ? 'Numbers' : 'Excel';
   if (!src) return '';
-  return mediaFrame(title, src, width, height, url);
+  return mediaFrame(title, src, width, height, url, hrefRaw, newTab);
 };
 
 htmlGen.forBlock['media_presentation'] = function (block) {
@@ -313,28 +333,38 @@ htmlGen.forBlock['media_presentation'] = function (block) {
   const url = String(block.getFieldValue('URL') || '').trim();
   const width = toEmbedDimension(block.getFieldValue('WIDTH'), '100%');
   const height = toEmbedDimension(block.getFieldValue('HEIGHT'), '500px');
+  const hrefRaw = String(block.getFieldValue('HREF') || '').trim();
+  const newTab = block.getFieldValue('NEW_TAB') === 'TRUE';
   const src = resolveEmbedSrc(url, type);
   const title = type === 'google-slides' ? 'Googleスライド' : type === 'keynote' ? 'Keynote' : 'PowerPoint';
   if (!src) return '';
-  return mediaFrame(title, src, width, height, url);
+  return mediaFrame(title, src, width, height, url, hrefRaw, newTab);
 };
 
 htmlGen.forBlock['media_pdf'] = function (block) {
   const url = String(block.getFieldValue('URL') || '').trim();
   const width = toEmbedDimension(block.getFieldValue('WIDTH'), '100%');
   const height = toEmbedDimension(block.getFieldValue('HEIGHT'), '600px');
+  const hrefRaw = String(block.getFieldValue('HREF') || '').trim();
+  const newTab = block.getFieldValue('NEW_TAB') === 'TRUE';
   if (!url) return '';
-  return mediaFrame('PDF', url, width, height, url);
+  return mediaFrame('PDF', url, width, height, url, hrefRaw, newTab);
 };
 
 htmlGen.forBlock['media_text_file'] = function (block) {
   const url = String(block.getFieldValue('URL') || '').trim();
   const textType = block.getFieldValue('TEXT_TYPE') || 'txt';
+  const hrefRaw = String(block.getFieldValue('HREF') || '').trim();
+  const newTab = block.getFieldValue('NEW_TAB') === 'TRUE';
   if (!url) return '';
   const viewerId = `text-media-${toSafeId(block.id)}`;
   const sourceUrl = JSON.stringify(url);
   const label = textType === 'md' ? 'Markdown (.md)' : 'Text (.txt)';
-  return `<section style="margin:1rem 0;">
+  const overlayAnchor = hrefRaw
+    ? `\n  <a href="${esc(hrefRaw)}"${newTab ? ' target="_blank" rel="noopener noreferrer"' : ''} style="position:absolute; inset:0; z-index:2; display:block; cursor:pointer;" aria-label="${esc(label)}のリンクを開く"></a>`
+    : '';
+  const sectionStyle = hrefRaw ? 'position:relative; margin:1rem 0;' : 'margin:1rem 0;';
+  return `<section style="${sectionStyle}">
   <h4 style="margin:0 0 .5rem 0;">${esc(label)}</h4>
   <pre id="${viewerId}" style="white-space:pre-wrap; word-break:break-word; background:#111827; color:#f9fafb; padding:1rem; border-radius:8px; overflow:auto; max-height:420px;">読み込み中...</pre>
   <script>
@@ -359,7 +389,7 @@ htmlGen.forBlock['media_text_file'] = function (block) {
           target.insertAdjacentElement('afterend', link);
         });
     })();
-  </script>
+  </script>${overlayAnchor}
 </section>\n`;
 };
 
@@ -367,10 +397,16 @@ htmlGen.forBlock['media_google_apps_script'] = function (block) {
   const url = String(block.getFieldValue('URL') || '').trim();
   const width = toEmbedDimension(block.getFieldValue('WIDTH'), '100%');
   const height = toEmbedDimension(block.getFieldValue('HEIGHT'), '500px');
+  const hrefRaw = String(block.getFieldValue('HREF') || '').trim();
+  const newTab = block.getFieldValue('NEW_TAB') === 'TRUE';
   if (!url) return '';
-  return `<figure style="margin:1rem 0;">
+  const overlayAnchor = hrefRaw
+    ? `\n  <a href="${esc(hrefRaw)}"${newTab ? ' target="_blank" rel="noopener noreferrer"' : ''} style="position:absolute; inset:0; z-index:2; display:block; cursor:pointer;" aria-label="リンクを開く"></a>`
+    : '';
+  const figureStyle = hrefRaw ? 'position:relative; margin:1rem 0;' : 'margin:1rem 0;';
+  return `<figure style="${figureStyle}">
   <iframe title="Google Apps Script" src="${esc(url)}" style="width:${width}; height:${height}; border:1px solid #d1d5db; border-radius:8px; background:#fff;" loading="lazy"></iframe>
-  <figcaption style="font-size:.9rem; margin-top:.4rem; color:#4b5563;">動作しない場合はスクリプトの公開設定（ウェブアプリ）を確認してください。</figcaption>
+  <figcaption style="font-size:.9rem; margin-top:.4rem; color:#4b5563;">動作しない場合はスクリプトの公開設定（ウェブアプリ）を確認してください。</figcaption>${overlayAnchor}
 </figure>\n`;
 };
 

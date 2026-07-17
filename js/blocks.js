@@ -251,12 +251,14 @@ Blockly.defineBlocksWithJsonArray([
   // <audio>
   {
     'type': 'media_audio',
-    'message0': '🔊 音声\nURL: %1\ncontrols: %2  autoplay: %3  loop: %4',
+    'message0': '🔊 音声\nURL: %1\ncontrols: %2  autoplay: %3  loop: %4\nリンクURL: %5  新しいタブ: %6',
     'args0': [
       { 'type': 'field_input', 'name': 'SRC', 'text': 'https://www.w3schools.com/html/horse.mp3' },
       { 'type': 'field_checkbox', 'name': 'CONTROLS', 'checked': true },
       { 'type': 'field_checkbox', 'name': 'AUTOPLAY', 'checked': false },
-      { 'type': 'field_checkbox', 'name': 'LOOP', 'checked': false }
+      { 'type': 'field_checkbox', 'name': 'LOOP', 'checked': false },
+      { 'type': 'field_input',    'name': 'HREF',     'text': '' },
+      { 'type': 'field_checkbox', 'name': 'NEW_TAB',  'checked': false }
     ],
     'previousStatement': null,
     'nextStatement': null,
@@ -268,14 +270,16 @@ Blockly.defineBlocksWithJsonArray([
   // <video>
   {
     'type': 'media_video',
-    'message0': '🎬 動画\nURL: %1\n幅: %2  高さ: %3\ncontrols: %4  autoplay: %5  loop: %6',
+    'message0': '🎬 動画\nURL: %1\n幅: %2  高さ: %3\ncontrols: %4  autoplay: %5  loop: %6\nリンクURL: %7  新しいタブ: %8',
     'args0': [
       { 'type': 'field_input', 'name': 'SRC', 'text': 'https://www.w3schools.com/html/mov_bbb.mp4' },
       { 'type': 'field_input', 'name': 'WIDTH', 'text': '100%' },
       { 'type': 'field_input', 'name': 'HEIGHT', 'text': '360px' },
       { 'type': 'field_checkbox', 'name': 'CONTROLS', 'checked': true },
       { 'type': 'field_checkbox', 'name': 'AUTOPLAY', 'checked': false },
-      { 'type': 'field_checkbox', 'name': 'LOOP', 'checked': false }
+      { 'type': 'field_checkbox', 'name': 'LOOP', 'checked': false },
+      { 'type': 'field_input',    'name': 'HREF',     'text': '' },
+      { 'type': 'field_checkbox', 'name': 'NEW_TAB',  'checked': false }
     ],
     'previousStatement': null,
     'nextStatement': null,
@@ -287,7 +291,7 @@ Blockly.defineBlocksWithJsonArray([
   // Documents (Word, Google Docs, Pages)
   {
     'type': 'media_document',
-    'message0': '📄 ドキュメント\n種類: %1\nURL: %2\n幅: %3  高さ: %4',
+    'message0': '📄 ドキュメント\n種類: %1\nURL: %2\n幅: %3  高さ: %4\nリンクURL: %5  新しいタブ: %6',
     'args0': [
       {
         'type': 'field_dropdown',
@@ -300,7 +304,9 @@ Blockly.defineBlocksWithJsonArray([
       },
       { 'type': 'field_input', 'name': 'URL', 'text': 'https://example.com/document.docx' },
       { 'type': 'field_input', 'name': 'WIDTH', 'text': '100%' },
-      { 'type': 'field_input', 'name': 'HEIGHT', 'text': '500px' }
+      { 'type': 'field_input', 'name': 'HEIGHT', 'text': '500px' },
+      { 'type': 'field_input',    'name': 'HREF',    'text': '' },
+      { 'type': 'field_checkbox', 'name': 'NEW_TAB', 'checked': false }
     ],
     'previousStatement': null,
     'nextStatement': null,
@@ -312,7 +318,7 @@ Blockly.defineBlocksWithJsonArray([
   // Spreadsheets (Excel, Google Sheets, Numbers)
   {
     'type': 'media_spreadsheet',
-    'message0': '📊 表計算シート\n種類: %1\nURL: %2\n幅: %3  高さ: %4',
+    'message0': '📊 表計算シート\n種類: %1\nURL: %2\n幅: %3  高さ: %4\nリンクURL: %5  新しいタブ: %6',
     'args0': [
       {
         'type': 'field_dropdown',
@@ -325,7 +331,9 @@ Blockly.defineBlocksWithJsonArray([
       },
       { 'type': 'field_input', 'name': 'URL', 'text': 'https://example.com/sheet.xlsx' },
       { 'type': 'field_input', 'name': 'WIDTH', 'text': '100%' },
-      { 'type': 'field_input', 'name': 'HEIGHT', 'text': '500px' }
+      { 'type': 'field_input', 'name': 'HEIGHT', 'text': '500px' },
+      { 'type': 'field_input',    'name': 'HREF',    'text': '' },
+      { 'type': 'field_checkbox', 'name': 'NEW_TAB', 'checked': false }
     ],
     'previousStatement': null,
     'nextStatement': null,
@@ -337,7 +345,7 @@ Blockly.defineBlocksWithJsonArray([
   // Presentations (PowerPoint, Google Slides, Keynote)
   {
     'type': 'media_presentation',
-    'message0': '📽 プレゼンテーション\n種類: %1\nURL: %2\n幅: %3  高さ: %4',
+    'message0': '📽 プレゼンテーション\n種類: %1\nURL: %2\n幅: %3  高さ: %4\nリンクURL: %5  新しいタブ: %6',
     'args0': [
       {
         'type': 'field_dropdown',
@@ -350,7 +358,9 @@ Blockly.defineBlocksWithJsonArray([
       },
       { 'type': 'field_input', 'name': 'URL', 'text': 'https://example.com/slides.pptx' },
       { 'type': 'field_input', 'name': 'WIDTH', 'text': '100%' },
-      { 'type': 'field_input', 'name': 'HEIGHT', 'text': '500px' }
+      { 'type': 'field_input', 'name': 'HEIGHT', 'text': '500px' },
+      { 'type': 'field_input',    'name': 'HREF',    'text': '' },
+      { 'type': 'field_checkbox', 'name': 'NEW_TAB', 'checked': false }
     ],
     'previousStatement': null,
     'nextStatement': null,
@@ -362,11 +372,13 @@ Blockly.defineBlocksWithJsonArray([
   // PDF
   {
     'type': 'media_pdf',
-    'message0': '📕 PDF\nURL: %1\n幅: %2  高さ: %3',
+    'message0': '📕 PDF\nURL: %1\n幅: %2  高さ: %3\nリンクURL: %4  新しいタブ: %5',
     'args0': [
       { 'type': 'field_input', 'name': 'URL', 'text': 'https://example.com/sample.pdf' },
       { 'type': 'field_input', 'name': 'WIDTH', 'text': '100%' },
-      { 'type': 'field_input', 'name': 'HEIGHT', 'text': '600px' }
+      { 'type': 'field_input', 'name': 'HEIGHT', 'text': '600px' },
+      { 'type': 'field_input',    'name': 'HREF',    'text': '' },
+      { 'type': 'field_checkbox', 'name': 'NEW_TAB', 'checked': false }
     ],
     'previousStatement': null,
     'nextStatement': null,
@@ -378,7 +390,7 @@ Blockly.defineBlocksWithJsonArray([
   // Text files (.txt / .md)
   {
     'type': 'media_text_file',
-    'message0': '📄 テキストファイル\nURL: %1\n種類: %2',
+    'message0': '📄 テキストファイル\nURL: %1\n種類: %2\nリンクURL: %3  新しいタブ: %4',
     'args0': [
       { 'type': 'field_input', 'name': 'URL', 'text': 'https://example.com/readme.md' },
       {
@@ -388,7 +400,9 @@ Blockly.defineBlocksWithJsonArray([
           ['txt', 'txt'],
           ['md', 'md']
         ]
-      }
+      },
+      { 'type': 'field_input',    'name': 'HREF',    'text': '' },
+      { 'type': 'field_checkbox', 'name': 'NEW_TAB', 'checked': false }
     ],
     'previousStatement': null,
     'nextStatement': null,
@@ -400,11 +414,13 @@ Blockly.defineBlocksWithJsonArray([
   // Google Apps Script embed
   {
     'type': 'media_google_apps_script',
-    'message0': '🧪 Google Apps Script埋め込み\nWebアプリURL: %1\n幅: %2  高さ: %3',
+    'message0': '🧪 Google Apps Script埋め込み\nWebアプリURL: %1\n幅: %2  高さ: %3\nリンクURL: %4  新しいタブ: %5',
     'args0': [
       { 'type': 'field_input', 'name': 'URL', 'text': 'https://script.google.com/macros/s/XXXXXXXXXXXXXXXX/exec' },
       { 'type': 'field_input', 'name': 'WIDTH', 'text': '100%' },
-      { 'type': 'field_input', 'name': 'HEIGHT', 'text': '500px' }
+      { 'type': 'field_input', 'name': 'HEIGHT', 'text': '500px' },
+      { 'type': 'field_input',    'name': 'HREF',    'text': '' },
+      { 'type': 'field_checkbox', 'name': 'NEW_TAB', 'checked': false }
     ],
     'previousStatement': null,
     'nextStatement': null,

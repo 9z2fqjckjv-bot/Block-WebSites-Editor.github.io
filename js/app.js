@@ -504,6 +504,63 @@ function setupKeyboardShortcuts() {
   });
 }
 
+function setupImeFriendlyTextInput() {
+  const textProto = Blockly.FieldTextInput && Blockly.FieldTextInput.prototype;
+  if (!textProto || textProto.__imeFriendlyApplied) return;
+
+  const originalShowEditor = textProto.showEditor_;
+  textProto.showEditor_ = function (...args) {
+    originalShowEditor.apply(this, args);
+    const input = this.htmlInput_;
+    if (!input || input.__imeAwareBound) return;
+    input.__imeAwareBound = true;
+    input.dataset.composing = '0';
+    input.addEventListener('compositionstart', () => {
+      input.dataset.composing = '1';
+    });
+    input.addEventListener('compositionend', () => {
+      setTimeout(() => { input.dataset.composing = '0'; }, 0);
+    });
+  };
+
+  const originalKeydown = textProto.onHtmlInputKeyDown_;
+  textProto.onHtmlInputKeyDown_ = function (event) {
+    const input = this.htmlInput_;
+    if (event && event.key === 'Enter' && input) {
+      const composing = event.isComposing || input.dataset.composing === '1';
+      if (composing) return;
+    }
+    return originalKeydown.call(this, event);
+  };
+
+  textProto.__imeFriendlyApplied = true;
+}
+
+async function importWebsiteFromUrl() {
+  const rawUrl = window.prompt('読み込むWebサイトURLを入力してください（http:// または https://）');
+  if (!rawUrl) return;
+
+  const importer = window.HtmlImporter;
+  if (!importer || typeof importer.fetchHtmlFromUrl !== 'function' || typeof importer.htmlToWorkspaceXml !== 'function') {
+    window.alert('サイト読み込み機能の初期化に失敗しました。');
+    return;
+  }
+
+  showStatus('Webサイトを読み込み中...', true);
+  try {
+    const html = await importer.fetchHtmlFromUrl(rawUrl);
+    const xml = importer.htmlToWorkspaceXml(html, rawUrl);
+    loadXmlText(xml);
+    updatePreview();
+    saveProjectToLocal();
+    showStatus('Webサイトをブロックへ変換しました');
+  } catch (error) {
+    console.error('Failed to import website:', error);
+    showStatus('サイト読み込みに失敗しました');
+    window.alert('サイト読み込みに失敗しました。CORS制限やURL形式を確認してください。');
+  }
+}
+
 // ──────────────────────────────────────────────────────────────
 //  Blockly Workspace Init
 // ──────────────────────────────────────────────────────────────
@@ -657,6 +714,7 @@ function setupButtons() {
   document.getElementById('btnLoadProject').addEventListener('click', () => {
     document.getElementById('projectFileInput').click();
   });
+  document.getElementById('btnImportWebsite').addEventListener('click', importWebsiteFromUrl);
   document.getElementById('projectFileInput').addEventListener('change', handleProjectFileSelect);
   document.getElementById('templateSelect').addEventListener('change', event => {
     applyTemplate(event.target.value);
@@ -679,6 +737,7 @@ function setupButtons() {
 // ──────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
+  setupImeFriendlyTextInput();
   initWorkspace();
   setupTabs();
   setupViewportButtons();

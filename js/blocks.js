@@ -12,12 +12,14 @@ Blockly.defineBlocksWithJsonArray([
   // Root HTML Document  (standalone – no prev/next connections)
   {
     'type': 'page_root',
-    'message0': '🌐 Webページ\nタイトル: %1\nフォントサイズ: %2 px\n背景色: %3  文字色: %4\n%5',
+    'message0': '🌐 Webページ\nタイトル: %1\nフォントサイズ: %2 px\n背景色: %3  文字色: %4\n<head> 内コード\n%5\n<body> 先頭コード\n%6\nページ本文\n%7',
     'args0': [
       { 'type': 'field_input',  'name': 'TITLE',      'text': 'マイWebサイト' },
       { 'type': 'field_number', 'name': 'FONT_SIZE',   'value': 16, 'min': 8, 'max': 72 },
       { 'type': 'field_colour', 'name': 'BG_COLOR',    'colour': '#f8f9fa' },
       { 'type': 'field_colour', 'name': 'TEXT_COLOR',  'colour': '#333333' },
+      { 'type': 'input_statement', 'name': 'HEAD_CONTENT' },
+      { 'type': 'input_statement', 'name': 'BODY_TOP_CONTENT' },
       { 'type': 'input_statement', 'name': 'CONTENT' }
     ],
     'colour': 230,
@@ -112,6 +114,34 @@ Blockly.defineBlocksWithJsonArray([
     'nextStatement': null,
     'colour': 210,
     'tooltip': '<div> 汎用コンテナ。CSSクラスを指定できます',
+    'helpUrl': ''
+  },
+
+  // Code inserted in <head> (for analytics tags etc.)
+  {
+    'type': 'script_head_code',
+    'message0': '🏷 <head> 埋め込みコード\nコード: %1',
+    'args0': [
+      { 'type': 'field_multilinetext', 'name': 'CODE', 'text': '<script>\n  // head内コード\n</script>' }
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    'colour': 250,
+    'tooltip': '<head> 内に script / meta などのコードを埋め込みます',
+    'helpUrl': ''
+  },
+
+  // Code inserted at top of <body> (e.g. GTM noscript)
+  {
+    'type': 'script_body_top_code',
+    'message0': '🏷 <body> 先頭埋め込みコード\nコード: %1',
+    'args0': [
+      { 'type': 'field_multilinetext', 'name': 'CODE', 'text': '<noscript>\n  body先頭コード\n</noscript>' }
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    'colour': 250,
+    'tooltip': '<body> 開始直後に script / noscript などを埋め込みます',
     'helpUrl': ''
   },
 

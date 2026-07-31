@@ -22,6 +22,17 @@ const TOOLBOX = {
       ]
     },
 
+    // ── Script / Embed placement ───────────────────────────────
+    {
+      kind: 'category',
+      name: '⚙️ スクリプト',
+      colour: '#7A5DE8',
+      contents: [
+        { kind: 'block', type: 'script_head_code' },
+        { kind: 'block', type: 'script_body_top_code' }
+      ]
+    },
+
     // ── Text ────────────────────────────────────────────────
     {
       kind: 'category',

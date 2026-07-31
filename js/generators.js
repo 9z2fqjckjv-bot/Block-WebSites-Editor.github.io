@@ -134,6 +134,8 @@ htmlGen.forBlock['page_root'] = function (block, generator) {
   const fontSize  = block.getFieldValue('FONT_SIZE');
   const bgColor   = block.getFieldValue('BG_COLOR');
   const textColor = block.getFieldValue('TEXT_COLOR');
+  const headContent = generator.statementToCode(block, 'HEAD_CONTENT');
+  const bodyTopContent = generator.statementToCode(block, 'BODY_TOP_CONTENT');
   const content   = generator.statementToCode(block, 'CONTENT');
 
   return `<!DOCTYPE html>
@@ -170,10 +172,18 @@ htmlGen.forBlock['page_root'] = function (block, generator) {
       .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
     }
   </style>
-</head>
+${headContent}</head>
 <body>
-${content}</body>
+${bodyTopContent}${content}</body>
 </html>`;
+};
+
+htmlGen.forBlock['script_head_code'] = function (block) {
+  return `${block.getFieldValue('CODE')}\n`;
+};
+
+htmlGen.forBlock['script_body_top_code'] = function (block) {
+  return `${block.getFieldValue('CODE')}\n`;
 };
 
 htmlGen.forBlock['page_header'] = function (block, generator) {
